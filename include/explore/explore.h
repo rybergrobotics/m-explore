@@ -44,6 +44,7 @@
 
 #include <actionlib/client/simple_action_client.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Bool.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <ros/ros.h>
 #include <visualization_msgs/MarkerArray.h>
@@ -89,6 +90,10 @@ private:
   ros::NodeHandle relative_nh_;
   ros::Publisher marker_array_publisher_;
   tf::TransformListener tf_listener_;
+
+  //Interface with WebApp for remote control
+	ros::Subscriber explore_sub_;
+	void explore_cb_(const std_msgs::Bool& msg);
 
   Costmap2DClient costmap_client_;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>

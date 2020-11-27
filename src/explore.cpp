@@ -85,6 +85,12 @@ Explore::Explore()
   exploring_timer_ =
       relative_nh_.createTimer(ros::Duration(1. / planner_frequency_),
                                [this](const ros::TimerEvent&) { makePlan(); });
+
+	explore_sub_ = private_nh_.subscribe("auto", 1, &Explore::explore_cb_, this);
+  ROS_INFO("Hi to move_base server");
+	//We stop the automatic planning, because we will be enabling it via the explore_cb_
+	stop();
+
 }
 
 Explore::~Explore()
@@ -290,6 +296,19 @@ void Explore::stop()
   move_base_client_.cancelAllGoals();
   exploring_timer_.stop();
   ROS_INFO("Exploration stopped.");
+}
+
+void Explore::explore_cb_(const std_msgs::Bool& msg){
+	if(msg.data == true){
+		start();
+		ROS_INFO("Starting Automated Exploration");
+	}
+	else{
+		stop();
+		ROS_INFO("Stopping Automated Exploration");
+	}
+
+
 }
 
 }  // namespace explore
